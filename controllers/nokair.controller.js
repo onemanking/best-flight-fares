@@ -5,19 +5,22 @@ import config from '../config'
 const getFlight = async ctx => {
 	return new Promise(async (resolve, rejects) => {
 		try {
-			const { from, to } = ctx.request.query
+			const { from, to, currency } = ctx.request.query
 			const fromDate = dayjs(ctx.request.query.fromDate).format('MM/DD/YYYY')
 			const toDate = dayjs(ctx.request.query.toDate).format('MM/DD/YYYY')
 			const mainUrl = config.nokAirUrl
-			const url = `${mainUrl}?from=${from}&to=${to}&fromDate=${fromDate}&toDate=${toDate}&currency=THB`
+			const url = `${mainUrl}?from=${from}&to=${to}&fromDate=${fromDate}&toDate=${toDate}&currency=${currency}`
 
 			const res = await axios.get(url)
 			const results = res.data.map(item => {
 				const itemDate = dayjs(item.dateKey, 'YYYYMMDD')
 				return {
+					from,
+					to,
 					date: itemDate.format('DD/MM/YYYY'),
 					day: itemDate.format('ddd'),
 					fare: parseFloat(item.amount.replace(',', '')),
+					currency,
 					airline: 'NokAir'
 				}
 			})
