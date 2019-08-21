@@ -2,14 +2,15 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import config from '../config'
 
-const getFlight = async ctx => {
+const getFlights = async ctx => {
 	return new Promise(async (resolve, rejects) => {
 		try {
 			const { from, to, currency } = ctx.request.query
 			const fromDate = dayjs(ctx.request.query.fromDate).format('MM/DD/YYYY')
 			const toDate = dayjs(ctx.request.query.toDate).format('MM/DD/YYYY')
-			const mainUrl = config.nokAirUrl
+			const mainUrl = config.yellowAirlineUrl
 			const url = `${mainUrl}?from=${from}&to=${to}&fromDate=${fromDate}&toDate=${toDate}&currency=${currency}`
+			const airline = config.yellowAirline
 
 			const res = await axios.get(url)
 			const results = res.data.map(item => {
@@ -21,22 +22,22 @@ const getFlight = async ctx => {
 					day: itemDate.format('ddd'),
 					fare: parseFloat(item.amount.replace(',', '')),
 					currency,
-					airline: 'NokAir'
+					airline
 				}
 			})
 			console.log(results)
 			resolve(results)
-		} catch (e) {
-			console.log(`error : ${e}`)
-			rejects(e)
+		} catch (err) {
+			console.log(`error : ${err}`)
+			rejects(err)
 		}
 	})
 }
 
-const getLowestFare = async ctx => {
+const getExpectFares = async ctx => {
 	try {
 		const { expectPrice } = ctx.query
-		const results = await getFlight(ctx)
+		const results = await getFlights(ctx)
 		if (results.length <= 0) {
 			return ctx.body = {
 				status: 200,
@@ -52,13 +53,13 @@ const getLowestFare = async ctx => {
 			status: 200,
 			flights: filtered
 		}
-	} catch (e) {
-		console.log(`error : ${e}`)
+	} catch (err) {
+		console.log(`error : ${err}`)
 		return ctx.body = {
 			status: 500,
-			message: `Error : Unexpect error : ${e}`
+			message: `Error : Unexpect error : ${err}`
 		}
 	}
 }
 
-export default getLowestFare
+export default getExpectFares
