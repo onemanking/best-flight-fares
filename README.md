@@ -18,7 +18,7 @@ This repo followed implemented by this article : [หาตั๋วเครื
 
 4. use postman
 
-   - GET : /v1/{yellowairline|redairline}: to get yellow air line or redairline fares with those query params
+   - GET : /v1/{yellowairline|redairline}: to get yellow airline or red airline fares with these query params
 
      - from = departure
      - to = destination
