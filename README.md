@@ -22,8 +22,8 @@ This repo follow implemented by this article : [หาตั๋วเครื�
 
      - from = departure
      - to = destination
-     - fromDate = MM/DD/YYY
-     - toDate = MM/DD/YYY
+     - fromDate = MM/DD/YYYY
+     - toDate = MM/DD/YYYY
      - currency
      - expectPrice
 
